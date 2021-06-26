@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <title>Add Shopping List Item</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
   </head>
   <body>
     <form>
@@ -10,7 +14,25 @@
         <!-- as soon as the window loads input will be autofocused -->
         <input type="text" id="item" autofocus />
       </div>
-      <button type="submit">Add Item</button>
+      <button class="btn waves-effect waves-light" type="submit">
+        Add Item
+      </button>
     </form>
+
+    <script>
+      // ipc renderer (send event to payload from this file to main.js)
+      const electron = require("electron");
+      const { ipcRenderer } = electron;
+
+      const form = document.querySelector("form");
+      form.addEventListener("submit", submitForm);
+
+      function submitForm(e) {
+        e.preventDefault();
+        const item = document.querySelector("#item").value;
+        // ipc renderer is just like socket io you have to send from frontend it will catch it in electron file
+        ipcRenderer.send("item:add", item);
+      }
+    </script>
   </body>
 </html>
